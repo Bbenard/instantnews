@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">InstantNews</string>
+    <string name="progressDialogText">Loading...This will take some time depending on your connection</string>
 </resources>

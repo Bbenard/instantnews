@@ -3,7 +3,6 @@ package com.example.benard.instantnews;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.os.AsyncTask;
-import android.provider.DocumentsContract;
 import android.util.Log;
 
 import org.w3c.dom.Document;
@@ -27,10 +26,13 @@ public class ReadRss extends AsyncTask<Void,Void,Void> {
     String address="http://www.sciencemag.org/rss/news_current.xml";
     URL url;
 
+    //the following context is used to implement the progress Dialog
+    //as shown below
     public ReadRss(Context context){
         this.context=context;
         progressDialog = new ProgressDialog(context);
-      progressDialog.setMessage("Loading....");
+        //the context gets the message to display on the progress dialog
+      progressDialog.setMessage(context.getString(R.string.progressDialogText));
 
     }
     @Override
@@ -45,7 +47,7 @@ public class ReadRss extends AsyncTask<Void,Void,Void> {
     }
 
     @Override
-    protected Void doInBackground(Void... voids) {
+    protected Void doInBackground(Void... params) {
         processXml (GetData());
         return null;
         }
@@ -57,22 +59,22 @@ public class ReadRss extends AsyncTask<Void,Void,Void> {
                 Node channel=root.getChildNodes().item(1);
                 NodeList items=channel.getChildNodes();
                 for (int i=0;i<items.getLength();i++){
-                    Node cureentchild=items.item(i);
-                    if (cureentchild.getNodeName().equalsIgnoreCase("item")){
-                        NodeList itemchilds=cureentchild.getChildNodes();
+                    Node currentchild=items.item(i);
+                    if (currentchild.getNodeName().equalsIgnoreCase("item")){NodeList itemchilds=currentchild.getChildNodes();
                         for (int j=0;j<itemchilds.getLength();j++){
-                            Node cureent=itemchilds.item(j);
-                            Log.d("textcontent",cureent.getTextContent());
+                            Node current=itemchilds.item(j);
+                            Log.d("textcontent",currentchild.getTextContent());
                         }
                     }
                 }
             }
         }
     }
-
+//making a HttpURLConnection
     public Document GetData(){
         try {
             url=new URL(address);
+            //openning connection using URL object
             HttpURLConnection connection= (HttpURLConnection)url.openConnection();
             connection.setRequestMethod("Get");
             InputStream inputStream=connection.getInputStream();
