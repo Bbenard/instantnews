@@ -23,7 +23,7 @@ import javax.xml.parsers.DocumentBuilderFactory;
 public class ReadRss extends AsyncTask<Void,Void,Void> {
     Context context;
     ProgressDialog progressDialog;
-    String address="http://www.sciencemag.org/rss/news_current.xml";
+    String address="http://rss.cnn.com/rss/edition.rss";
     URL url;
 
     //the following context is used to implement the progress Dialog
@@ -53,8 +53,8 @@ public class ReadRss extends AsyncTask<Void,Void,Void> {
         }
 
     private void processXml(Document data) {
-        if (data != null) {
             if (data != null) {
+                Log.d("Root",data.getDocumentElement().getNodeName());
                 Element root=data.getDocumentElement();
                 Node channel=root.getChildNodes().item(1);
                 NodeList items=channel.getChildNodes();
@@ -69,23 +69,27 @@ public class ReadRss extends AsyncTask<Void,Void,Void> {
                 }
             }
         }
-    }
+
 //making a HttpURLConnection
     public Document GetData(){
         try {
             url=new URL(address);
             //openning connection using URL object
             HttpURLConnection connection= (HttpURLConnection)url.openConnection();
+                Log.d(ReadRss.class.getSimpleName(),connection.toString());
             connection.setRequestMethod("Get");
             InputStream inputStream=connection.getInputStream();
             DocumentBuilderFactory builderFactory=DocumentBuilderFactory.newInstance();
             DocumentBuilder builder=builderFactory.newDocumentBuilder();
             Document xmlDoc=builder.parse(inputStream);
+            Log.d("ping",String.valueOf(xmlDoc));
+
             return xmlDoc;
 
         }
         catch (Exception e){
             e.printStackTrace();
+
             return null;
         }
 
